@@ -12,6 +12,8 @@ export default class Main extends Component {
     newRepo: '',
     repositories: [],
     loading: false,
+    error: null,
+    placeerror: 'Adicionar repositório',
   };
 
   componentDidMount() {
@@ -31,7 +33,7 @@ export default class Main extends Component {
   }
 
   handleInputChange = e => {
-    this.setState({ newRepo: e.target.value });
+    this.setState({ newRepo: e.target.value, error: null });
   };
 
   handleSubmit = async e => {
@@ -39,25 +41,47 @@ export default class Main extends Component {
 
     this.setState({
       loading: true,
+      error: false,
     });
 
-    const { newRepo, repositories } = this.state;
+    try {
+      const { newRepo, repositories } = this.state;
 
-    const response = await api.get(`/repos/${newRepo}`);
+      if (newRepo === '')
+        throw new Error('Você precisa indicar um repositório');
 
-    const data = {
-      name: response.data.full_name,
-    };
+      const hasRepo = repositories.find(r => r.name === newRepo);
 
-    this.setState({
-      repositories: [...repositories, data],
-      newRepo: '',
-      loading: false,
-    });
+      if (hasRepo) {
+        this.setState({ newRepo: '' });
+        throw new Error('Repositório duplicado');
+      }
+
+      const response = await api.get(`/repos/${newRepo}`).catch(err => {
+        if (err.response.status === 404) {
+          this.setState({ newRepo: '' });
+          throw new Error('Repositório não existe');
+        }
+      });
+
+      const data = {
+        name: response.data.full_name,
+      };
+
+      this.setState({
+        repositories: [...repositories, data],
+        newRepo: '',
+        placeerror: 'Adicionar repositório',
+      });
+    } catch (error) {
+      this.setState({ error: true, placeerror: String(error) });
+    } finally {
+      this.setState({ loading: false });
+    }
   };
 
   render() {
-    const { newRepo, repositories, loading } = this.state;
+    const { newRepo, repositories, loading, error, placeerror } = this.state;
 
     return (
       <Container>
@@ -66,10 +90,10 @@ export default class Main extends Component {
           Repositórios
         </h1>
 
-        <Form onSubmit={this.handleSubmit}>
+        <Form onSubmit={this.handleSubmit} error={error}>
           <input
             type="text"
-            placeholder="Adicionar repositório"
+            placeholder={placeerror}
             value={newRepo}
             onChange={this.handleInputChange}
           />
