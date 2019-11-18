@@ -116,6 +116,7 @@ export default class Repository extends Component {
               </button>
             ))}
           </IssueFilter>
+
           {issues.map(issue => (
             <li key={String(issue.id)}>
               <img src={issue.user.avatar_url} alt={issue.user.login} />

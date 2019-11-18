@@ -7,13 +7,18 @@ export const Form = styled.form`
 
   input {
     flex: 1;
-    border: 1px solid ${props => (props.error ? '#ff6666' : '#eee')};
+    border: 1px solid ${props => (props && props.error ? '#ff6666' : '#eee')};
     padding: 10px 15px;
     border-radius: 4px;
     font-size: 16px;
-
-    transition: border 0.25s ease-out;
   }
+`;
+
+export const MessageError = styled.p`
+  margin-top: 10px;
+  color: #ff6666;
+  font-weight: bold;
+  font-size: 12px;
 `;
 
 const rotate = keyframes`
@@ -32,10 +37,9 @@ export const SubmitButton = styled.button.attrs(props => ({
 }))`
   background: #7159c1;
   border: 0;
-  padding: 0 10px;
+  padding: 0 15px;
   margin-left: 10px;
   border-radius: 4px;
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -67,6 +71,11 @@ export const List = styled.ul`
 
     & + li {
       border-top: 1px solid #eee;
+
+      div {
+        justify-content: center;
+        align-items: center;
+      }
     }
 
     a {
@@ -74,4 +83,12 @@ export const List = styled.ul`
       text-decoration: none;
     }
   }
+`;
+
+export const DeleteButton = styled.button`
+  background: white;
+  color: #ff6666;
+  border: 0;
+  margin-left: 10px;
+  vertical-align: middle;
 `;
