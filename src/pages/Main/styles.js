@@ -7,7 +7,7 @@ export const Form = styled.form`
 
   input {
     flex: 1;
-    border: 1px solid ${props => (props && props.error ? '#ff6666' : '#eee')};
+    border: 1px solid ${props => (props.error ? '#ff6666' : '#eee')};
     padding: 10px 15px;
     border-radius: 4px;
     font-size: 16px;
@@ -22,12 +22,12 @@ export const MessageError = styled.p`
 `;
 
 const rotate = keyframes`
-  from {
-    transform: rotate(0deg);
+  from{
+    transform:rotate(0deg);
   }
 
-  tp {
-    transform: rotate(360deg);
+  to{
+      transform: rotate(360deg)
   }
 `;
 
@@ -43,6 +43,10 @@ export const SubmitButton = styled.button.attrs(props => ({
   display: flex;
   justify-content: center;
   align-items: center;
+
+  &:hover {
+    background: #6650ae;
+  }
 
   &[disabled] {
     cursor: not-allowed;
